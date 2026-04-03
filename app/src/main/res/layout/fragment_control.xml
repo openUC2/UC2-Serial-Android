@@ -1,376 +1,866 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorLightGrey">
+    android:background="@color/colorBackground"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:background="@color/colorLightGrey">
+        android:padding="12dp">
 
-        <!-- Axis Controls (A, X, Y, Z) with Large and Small Increments -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Axis Control"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryHex" />
-
-        <!-- Axis A Control -->
-        <LinearLayout
+        <!-- Connection Status Bar -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="8dp"
-            android:background="@color/colorPrimaryDark">
+            app:cardElevation="1dp"
+            app:cardCornerRadius="8dp"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Axis A"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <Button
-                android:id="@+id/button_a_minus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="--"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_a_minus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_a_plus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="+"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_a_plus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="++"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="8dp"
-            android:background="@color/colorPrimaryDark">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Axis X"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <Button
-                android:id="@+id/button_x_minus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="--"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_x_minus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_x_plus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="+"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_x_plus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="++"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="8dp"
-            android:background="@color/colorPrimaryDark">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Axis Y"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <Button
-                android:id="@+id/button_y_minus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="--"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_y_minus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_y_plus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="+"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_y_plus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="++"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="8dp"
-            android:background="@color/colorPrimaryDark">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Axis Z"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <Button
-                android:id="@+id/button_z_minus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="--"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_z_minus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="-"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_z_plus_small"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="+"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey"/>
-
-            <Button
-                android:id="@+id/button_z_plus_large"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="++"
-                android:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/colorLightGrey" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="LED Control"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryHex" />
-
-        <!-- LED Slider -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="8dp"
-            android:background="@color/colorPrimaryHex">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="LED Intensity"
-                android:textSize="14sp"
-                android:textColor="@color/colorSecondaryGreen" />
-
-            <SeekBar
-                android:id="@+id/seekbar_led"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:max="255"
-                android:thumbTint="@color/colorTurquoise"
-                android:progressTint="@color/colorAccent" />
-        </LinearLayout>
+                android:orientation="horizontal"
+                android:padding="10dp"
+                android:gravity="center_vertical">
 
-        <!-- Laser Controls -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Laser Intensity"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/colorPrimaryHex" />
+                <View
+                    android:id="@+id/status_indicator"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@color/colorErrorText" />
 
-        <LinearLayout
+                <TextView
+                    android:id="@+id/text_status"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/status_disconnected"
+                    android:textSize="13sp"
+                    android:textColor="@color/colorOnSurfaceSecondary"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/text_baud"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/colorOnSurfaceSecondary" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== MOTOR CONTROL =================== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="4dp"
-            android:background="@color/colorPrimaryDark">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Laser 0"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <SeekBar
-                android:id="@+id/seekbar_laser0"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:max="1023"
-                android:thumbTint="@color/colorSecondaryGreen"
-                android:progressTint="@color/colorAccent" />
-        </LinearLayout>
-        <LinearLayout
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_motor"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorSectionMotor"
+                    android:drawablePadding="6dp"
+                    android:paddingBottom="8dp" />
+
+                <!-- Speed & Steps config row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_speed"
+                        style="@style/SliderLabel"
+                        android:paddingEnd="6dp" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_motor_speed"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:text="15000"
+                        android:textSize="13sp"
+                        android:background="@color/colorSurfaceVariant"
+                        android:paddingHorizontal="8dp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_steps"
+                        style="@style/SliderLabel"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="6dp" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_motor_steps"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:inputType="numberSigned"
+                        android:text="1000"
+                        android:textSize="13sp"
+                        android:background="@color/colorSurfaceVariant"
+                        android:paddingHorizontal="8dp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Axis A -->
+                <include layout="@layout/axis_control_row"
+                    android:id="@+id/axis_a_row" />
+
+                <!-- Axis X -->
+                <include layout="@layout/axis_control_row"
+                    android:id="@+id/axis_x_row" />
+
+                <!-- Axis Y -->
+                <include layout="@layout/axis_control_row"
+                    android:id="@+id/axis_y_row" />
+
+                <!-- Axis Z -->
+                <include layout="@layout/axis_control_row"
+                    android:id="@+id/axis_z_row" />
+
+                <!-- Home & Stop buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_home_all"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_home"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_stop_all"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_stop"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        android:backgroundTint="@color/colorErrorText"
+                        android:textColor="@color/colorOnPrimary"
+                        android:layout_marginStart="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== LED CONTROL =================== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="4dp"
-            android:background="@color/colorPrimaryDark">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Laser 1"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <SeekBar
-                android:id="@+id/seekbar_laser1"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:max="1023"
-                android:thumbTint="@color/colorSecondaryGreen"
-                android:progressTint="@color/colorAccent" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
 
-        <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_led"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorSectionLED"
+                    android:paddingBottom="8dp" />
+
+                <!-- R slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_red"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorLaser1" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_led_r"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="255"
+                        android:progressTint="@color/colorLaser1"
+                        android:thumbTint="@color/colorLaser1" />
+
+                    <TextView
+                        android:id="@+id/text_led_r_val"
+                        android:layout_width="36dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- G slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_green"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorLaser2" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_led_g"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="255"
+                        android:progressTint="@color/colorLaser2"
+                        android:thumbTint="@color/colorLaser2" />
+
+                    <TextView
+                        android:id="@+id/text_led_g_val"
+                        android:layout_width="36dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- B slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_blue"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorLaser3" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_led_b"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="255"
+                        android:progressTint="@color/colorLaser3"
+                        android:thumbTint="@color/colorLaser3" />
+
+                    <TextView
+                        android:id="@+id/text_led_b_val"
+                        android:layout_width="36dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Pattern buttons row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="4dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_led_apply"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Apply"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_led_left"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Left"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_led_right"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Right"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_led_off"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Off"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== LASER CONTROL =================== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="4dp"
-            android:background="@color/colorPrimaryDark">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Laser 2"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <SeekBar
-                android:id="@+id/seekbar_laser2"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:max="1023"
-                android:thumbTint="@color/colorSecondaryGreen"
-                android:progressTint="@color/colorAccent" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
 
-        <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_laser"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorSectionLaser"
+                    android:paddingBottom="8dp" />
+
+                <!-- Laser 0 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/laser_0"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorLaser0" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_laser0"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="1023"
+                        android:progressTint="@color/colorLaser0"
+                        android:thumbTint="@color/colorLaser0" />
+
+                    <TextView
+                        android:id="@+id/text_laser0_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Laser 1 (Red) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/laser_1"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorLaser1" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_laser1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="1023"
+                        android:progressTint="@color/colorLaser1"
+                        android:thumbTint="@color/colorLaser1" />
+
+                    <TextView
+                        android:id="@+id/text_laser1_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Laser 2 (Green) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/laser_2"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorLaser2" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_laser2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="1023"
+                        android:progressTint="@color/colorLaser2"
+                        android:thumbTint="@color/colorLaser2" />
+
+                    <TextView
+                        android:id="@+id/text_laser2_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Laser 3 (Blue) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="60dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/laser_3"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorLaser3" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_laser3"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="1023"
+                        android:progressTint="@color/colorLaser3"
+                        android:thumbTint="@color/colorLaser3" />
+
+                    <TextView
+                        android:id="@+id/text_laser3_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- All off button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_laser_all_off"
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:text="All Lasers Off"
+                    android:textSize="12sp"
+                    app:cornerRadius="8dp"
+                    android:layout_marginTop="4dp"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== GALVO SCANNER =================== -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginVertical="4dp"
-            android:background="@color/colorPrimaryDark">
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Laser 3"
-                android:textSize="12sp"
-                android:textColor="@color/colorAccent" />
-
-            <SeekBar
-                android:id="@+id/seekbar_laser3"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:max="255"
-                android:thumbTint="@color/colorSecondaryGreen"
-                android:progressTint="@color/colorAccent" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_galvo"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorSectionGalvo"
+                    android:paddingBottom="8dp" />
+
+                <!-- X position slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="4dp">
+
+                    <TextView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:text="X"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorSectionGalvo" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_galvo_x"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="4095"
+                        android:progress="2048"
+                        android:progressTint="@color/colorSectionGalvo"
+                        android:thumbTint="@color/colorSectionGalvo" />
+
+                    <TextView
+                        android:id="@+id/text_galvo_x_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="2048"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Y position slider -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="24dp"
+                        android:layout_height="wrap_content"
+                        android:text="Y"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorSectionGalvo" />
+
+                    <SeekBar
+                        android:id="@+id/seekbar_galvo_y"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:max="4095"
+                        android:progress="2048"
+                        android:progressTint="@color/colorSectionGalvo"
+                        android:thumbTint="@color/colorSectionGalvo" />
+
+                    <TextView
+                        android:id="@+id/text_galvo_y_val"
+                        android:layout_width="40dp"
+                        android:layout_height="wrap_content"
+                        android:text="2048"
+                        android:textSize="12sp"
+                        android:gravity="end"
+                        android:textColor="@color/colorOnSurfaceSecondary" />
+                </LinearLayout>
+
+                <!-- Raster scan config (nx, ny) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="nx"
+                        style="@style/SliderLabel"
+                        android:paddingEnd="4dp" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_galvo_nx"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:text="128"
+                        android:textSize="13sp"
+                        android:background="@color/colorSurfaceVariant"
+                        android:paddingHorizontal="6dp"
+                        android:gravity="center" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ny"
+                        style="@style/SliderLabel"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="4dp" />
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_galvo_ny"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:inputType="number"
+                        android:text="128"
+                        android:textSize="13sp"
+                        android:background="@color/colorSurfaceVariant"
+                        android:paddingHorizontal="6dp"
+                        android:gravity="center" />
+                </LinearLayout>
+
+                <!-- Galvo buttons -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_galvo_set"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="Set XY"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_galvo_scan"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_galvo_start"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_galvo_stop"
+                        android:layout_width="0dp"
+                        android:layout_height="36dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_galvo_stop"
+                        android:textSize="11sp"
+                        app:cornerRadius="8dp"
+                        android:backgroundTint="@color/colorErrorText"
+                        android:textColor="@color/colorOnPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== SYSTEM =================== -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/section_system"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorSectionSystem"
+                    android:paddingBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_get_state"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_get_state"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_restart_esp"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:text="@string/btn_restart"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginStart="4dp"
+                        android:backgroundTint="@color/colorAccent"
+                        android:textColor="@color/colorOnPrimary" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- =================== SERIAL MONITOR =================== -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardElevation="2dp"
+            app:cardCornerRadius="12dp"
+            android:layout_marginBottom="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/section_serial"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorSectionSystem" />
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switch_serial_visible"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true" />
+                </LinearLayout>
+
+                <!-- Serial output area -->
+                <ScrollView
+                    android:id="@+id/scroll_serial"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:background="@color/colorSerialBg"
+                    android:padding="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:fillViewport="false">
+
+                    <TextView
+                        android:id="@+id/text_serial_output"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="monospace"
+                        android:textSize="11sp"
+                        android:textColor="@color/colorReceiveText"
+                        android:text="" />
+                </ScrollView>
+
+                <!-- Command input row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/edit_serial_cmd"
+                        android:layout_width="0dp"
+                        android:layout_height="40dp"
+                        android:layout_weight="1"
+                        android:hint="@string/hint_command"
+                        android:textSize="12sp"
+                        android:fontFamily="monospace"
+                        android:inputType="text"
+                        android:background="@color/colorSurfaceVariant"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginEnd="8dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_serial_send"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="@string/btn_send"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        android:layout_marginEnd="4dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btn_serial_clear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:text="@string/btn_clear"
+                        android:textSize="12sp"
+                        app:cornerRadius="8dp"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 </ScrollView>

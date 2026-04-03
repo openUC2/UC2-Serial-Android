@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
@@ -12,6 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,8 +24,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,14 +34,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 import com.hoho.android.usbserial.util.SerialInputOutputManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -44,16 +47,13 @@ import java.util.Arrays;
 
 public class ControlFragment extends Fragment implements SerialInputOutputManager.Listener {
 
-    private String TAG = "ControlFragment";
-    private static final String ACTION_USB_PERMISSION = "com.openuc2.uc2serial.USB_PERMISSION";
-
-    private enum UsbPermission {
-        Unknown, Requested, Granted, Denied
-    }
-
+    private static final String TAG = "ControlFragment";
     private static final String INTENT_ACTION_GRANT_USB = BuildConfig.APPLICATION_ID + ".GRANT_USB";
     private static final int WRITE_WAIT_MILLIS = 2000;
     private static final int READ_WAIT_MILLIS = 2000;
+    private static final int MAX_SERIAL_LOG_LENGTH = 8000;
+
+    private enum UsbPermission { Unknown, Requested, Granted, Denied }
 
     private int deviceId, portNum, baudRate;
     private boolean withIoManager;
@@ -66,14 +66,17 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
     private UsbPermission usbPermission = UsbPermission.Unknown;
     private boolean connected = false;
 
-    // json strings
-    String ledOn = "{'task':'/ledarr_act', 'led':{'LEDArrMode':1, 'led_array':[{'id':0, 'r':255, 'g':255, 'b':255}]}}";
-    String ledOff = "{'task':'/ledarr_act', 'led':{'LEDArrMode':1, 'led_array':[{'id':0, 'r':0, 'g':0, 'b':0}]}}";
+    // UI elements
+    private TextView textStatus, textBaud;
+    private View statusIndicator;
+    private TextView textSerialOutput;
+    private ScrollView scrollSerial;
+    private EditText editSerialCmd;
+    private EditText editMotorSpeed, editMotorSteps;
+    private SwitchMaterial switchSerialVisible;
 
-    String cmdZPlusplus = "{\"task\":\"/motor_act\", \"motor\": { \"steppers\": [ { \"stepperid\": 3, \"position\": 1000, \"speed\": 1000, \"isabs\": 0, \"isaccel\":0} ] } }";
-    String cmdZPlus = "{\"task\":\"/motor_act\", \"motor\": { \"steppers\": [ { \"stepperid\": 3, \"position\": 100, \"speed\": 1000, \"isabs\": 0, \"isaccel\":0} ] } }";
-    String cmdZMinusminus = "{\"task\":\"/motor_act\", \"motor\": { \"steppers\": [ { \"stepperid\": 3, \"position\": -1000, \"speed\": 1000, \"isabs\": 0, \"isaccel\":0} ] } }";
-    String cmdZMinus = "{\"task\":\"/motor_act\", \"motor\": { \"steppers\": [ { \"stepperid\": 3, \"position\": -100, \"speed\": 1000, \"isabs\": 0, \"isaccel\":0} ] } }";
+    // LED state
+    private int ledR = 0, ledG = 0, ledB = 0;
 
     public ControlFragment() {
         broadcastReceiver = new BroadcastReceiver() {
@@ -81,8 +84,7 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
             public void onReceive(Context context, Intent intent) {
                 if (INTENT_ACTION_GRANT_USB.equals(intent.getAction())) {
                     usbPermission = intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)
-                            ? UsbPermission.Granted
-                            : UsbPermission.Denied;
+                            ? UsbPermission.Granted : UsbPermission.Denied;
                     connect();
                 }
             }
@@ -90,9 +92,8 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         mainLooper = new Handler(Looper.getMainLooper());
     }
 
-    /*
-     * Lifecycle
-     */
+    // ---- Lifecycle ----
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,7 +109,6 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
     public void onResume() {
         super.onResume();
         getActivity().registerReceiver(broadcastReceiver, new IntentFilter(INTENT_ACTION_GRANT_USB));
-
         if (usbPermission == UsbPermission.Unknown || usbPermission == UsbPermission.Granted)
             mainLooper.post(this::connect);
     }
@@ -123,175 +123,209 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         super.onPause();
     }
 
-    /*
-     * UI
-     */
+    // ---- UI setup ----
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // UI elements
-        int axisA = 0;
-        int axisX = 1;
-        int axisY = 2;
-        int axisZ = 3;
-        int speed = 5000;
-        int posCoarse = 1000;
-        int posFine = 100;
-        // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_control, container, false);
+        View root = inflater.inflate(R.layout.fragment_control, container, false);
 
-        // LED Array
-        SeekBar sliderLEDArrayIntensity = rootView.findViewById(R.id.seekbar_led);
+        // Status bar
+        statusIndicator = root.findViewById(R.id.status_indicator);
+        textStatus = root.findViewById(R.id.text_status);
+        textBaud = root.findViewById(R.id.text_baud);
+        textBaud.setText(baudRate + " baud");
 
-        sliderLEDArrayIntensity.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int ledVal = 0;
+        // Motor config fields
+        editMotorSpeed = root.findViewById(R.id.edit_motor_speed);
+        editMotorSteps = root.findViewById(R.id.edit_motor_steps);
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                ledVal = i;
+        // Setup the 4 axis control rows
+        setupAxisRow(root, R.id.axis_a_row, "A", 0);
+        setupAxisRow(root, R.id.axis_x_row, "X", 1);
+        setupAxisRow(root, R.id.axis_y_row, "Y", 2);
+        setupAxisRow(root, R.id.axis_z_row, "Z", 3);
+
+        // Home all & Stop all
+        root.findViewById(R.id.btn_home_all).setOnClickListener(v -> {
+            for (int axis = 0; axis < 4; axis++) {
+                send(UC2CommandBuilder.homeAxis(axis, getMotorSpeed(), -1, 20000, 1));
             }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                send(getLEDDict(ledVal));
+        });
+        root.findViewById(R.id.btn_stop_all).setOnClickListener(v -> {
+            for (int axis = 0; axis < 4; axis++) {
+                send(UC2CommandBuilder.motorStop(axis));
             }
         });
 
-        // Laser 0 Controls (Slider)
-        SeekBar sliderLaser0 = rootView.findViewById(R.id.seekbar_laser0);
-        sliderLaser0.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int laserVal = 0;
+        // LED controls
+        setupLedControls(root);
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                laserVal = i;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Send the laser control command
-                send(getLaserDict(laserVal, 0));    
-            }
+        // Laser controls
+        setupLaserSlider(root, R.id.seekbar_laser0, R.id.text_laser0_val, 0);
+        setupLaserSlider(root, R.id.seekbar_laser1, R.id.text_laser1_val, 1);
+        setupLaserSlider(root, R.id.seekbar_laser2, R.id.text_laser2_val, 2);
+        setupLaserSlider(root, R.id.seekbar_laser3, R.id.text_laser3_val, 3);
+        root.findViewById(R.id.btn_laser_all_off).setOnClickListener(v -> {
+            for (int i = 0; i < 4; i++) send(UC2CommandBuilder.laserSet(i, 0));
+            // Reset slider positions
+            ((SeekBar) root.findViewById(R.id.seekbar_laser0)).setProgress(0);
+            ((SeekBar) root.findViewById(R.id.seekbar_laser1)).setProgress(0);
+            ((SeekBar) root.findViewById(R.id.seekbar_laser2)).setProgress(0);
+            ((SeekBar) root.findViewById(R.id.seekbar_laser3)).setProgress(0);
         });
 
-        // Laser 1 Controls (Slider)
-        SeekBar sliderLaser1 = rootView.findViewById(R.id.seekbar_laser1);
-        sliderLaser1.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int laserVal = 0;
+        // Galvo controls
+        setupGalvoControls(root);
 
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                laserVal = i;
-            }
+        // System buttons
+        root.findViewById(R.id.btn_get_state).setOnClickListener(v -> send(UC2CommandBuilder.getState()));
+        root.findViewById(R.id.btn_restart_esp).setOnClickListener(v -> send(UC2CommandBuilder.restart()));
 
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
+        // Serial monitor
+        setupSerialMonitor(root);
 
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Send the laser control command
-                send(getLaserDict(laserVal, 1));
-            }
-        });
-
-        // Laser 2 Controls (Slider)
-        SeekBar sliderLaser2 = rootView.findViewById(R.id.seekbar_laser2);
-        sliderLaser2.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int laserVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                laserVal = i;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Send the laser control command
-                send(getLaserDict(laserVal, 2));
-            }
-        });
-
-        // Laser 3 Controls (Slider)
-        SeekBar sliderLaser3 = rootView.findViewById(R.id.seekbar_laser3);
-        sliderLaser3.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            int laserVal = 0;
-
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                laserVal = i;
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // Send the laser control command
-                send(getLaserDict(laserVal, 3));
-            }
-        });
-
-
-
-        // Axis A Controls
-        Button aMinusLarge = rootView.findViewById(R.id.button_a_minus_large);
-        Button aMinusSmall = rootView.findViewById(R.id.button_a_minus_small);
-        Button aPlusSmall = rootView.findViewById(R.id.button_a_plus_small);
-        Button aPlusLarge = rootView.findViewById(R.id.button_a_plus_large);
-
-        aMinusLarge.setOnClickListener(v -> send(getMotorControlDict(axisA, -posCoarse, speed)));
-        aMinusSmall.setOnClickListener(v -> send(getMotorControlDict(axisA, -posFine, speed)));
-        aPlusSmall.setOnClickListener(v -> send(getMotorControlDict(axisA, posFine, speed)));
-        aPlusLarge.setOnClickListener(v -> send(getMotorControlDict(axisA, posCoarse, speed)));
-
-        // Axis X Controls
-        Button xMinusLarge = rootView.findViewById(R.id.button_x_minus_large);
-        Button xMinusSmall = rootView.findViewById(R.id.button_x_minus_small);
-        Button xPlusSmall = rootView.findViewById(R.id.button_x_plus_small);
-        Button xPlusLarge = rootView.findViewById(R.id.button_x_plus_large);
-
-        xMinusLarge.setOnClickListener(v -> send(getMotorControlDict(axisX, -posCoarse, speed)));
-        xMinusSmall.setOnClickListener(v -> send(getMotorControlDict(axisX, -posFine, speed)));
-        xPlusSmall.setOnClickListener(v -> send(getMotorControlDict(axisX, posFine, speed)));
-        xPlusLarge.setOnClickListener(v -> send(getMotorControlDict(axisX, posCoarse, speed)));
-
-        // Axis Y Controls
-        Button yMinusLarge = rootView.findViewById(R.id.button_y_minus_large);
-        Button yMinusSmall = rootView.findViewById(R.id.button_y_minus_small);
-        Button yPlusSmall = rootView.findViewById(R.id.button_y_plus_small);
-        Button yPlusLarge = rootView.findViewById(R.id.button_y_plus_large);
-
-        yMinusLarge.setOnClickListener(v -> send(getMotorControlDict(axisY, -posCoarse, speed)));
-        yMinusSmall.setOnClickListener(v -> send(getMotorControlDict(axisY, -posFine, speed)));
-        yPlusSmall.setOnClickListener(v -> send(getMotorControlDict(axisY, posFine, speed)));
-        yPlusLarge.setOnClickListener(v -> send(getMotorControlDict(axisY, posCoarse, speed)));
-
-        // Axis Z Controls
-        Button zMinusLarge = rootView.findViewById(R.id.button_z_minus_large);
-        Button zMinusSmall = rootView.findViewById(R.id.button_z_minus_small);
-        Button zPlusSmall = rootView.findViewById(R.id.button_z_plus_small);
-        Button zPlusLarge = rootView.findViewById(R.id.button_z_plus_large);
-
-        zMinusLarge.setOnClickListener(v -> send(getMotorControlDict(axisZ, -posCoarse, speed)));
-        zMinusSmall.setOnClickListener(v -> send(getMotorControlDict(axisZ, -posFine, speed)));
-        zPlusSmall.setOnClickListener(v -> send(getMotorControlDict(axisZ, posFine, speed)));
-        zPlusLarge.setOnClickListener(v -> send(getMotorControlDict(axisZ, posCoarse, speed)));
-
-        return rootView;
+        return root;
     }
+
+    private void setupAxisRow(View root, int rowId, String label, int axisId) {
+        View row = root.findViewById(rowId);
+        ((TextView) row.findViewById(R.id.text_axis_label)).setText(label);
+
+        row.findViewById(R.id.btn_minus_large).setOnClickListener(v ->
+                send(UC2CommandBuilder.motorMove(axisId, -getMotorSteps(), getMotorSpeed(), false, true)));
+        row.findViewById(R.id.btn_minus_small).setOnClickListener(v ->
+                send(UC2CommandBuilder.motorMove(axisId, -(getMotorSteps() / 10), getMotorSpeed(), false, true)));
+        row.findViewById(R.id.btn_plus_small).setOnClickListener(v ->
+                send(UC2CommandBuilder.motorMove(axisId, getMotorSteps() / 10, getMotorSpeed(), false, true)));
+        row.findViewById(R.id.btn_plus_large).setOnClickListener(v ->
+                send(UC2CommandBuilder.motorMove(axisId, getMotorSteps(), getMotorSpeed(), false, true)));
+        row.findViewById(R.id.btn_home).setOnClickListener(v ->
+                send(UC2CommandBuilder.homeAxis(axisId, getMotorSpeed(), -1, 20000, 1)));
+    }
+
+    private int getMotorSpeed() {
+        try {
+            return Integer.parseInt(editMotorSpeed.getText().toString());
+        } catch (NumberFormatException e) {
+            return 15000;
+        }
+    }
+
+    private int getMotorSteps() {
+        try {
+            return Integer.parseInt(editMotorSteps.getText().toString());
+        } catch (NumberFormatException e) {
+            return 1000;
+        }
+    }
+
+    private void setupLedControls(View root) {
+        SeekBar seekR = root.findViewById(R.id.seekbar_led_r);
+        SeekBar seekG = root.findViewById(R.id.seekbar_led_g);
+        SeekBar seekB = root.findViewById(R.id.seekbar_led_b);
+        TextView valR = root.findViewById(R.id.text_led_r_val);
+        TextView valG = root.findViewById(R.id.text_led_g_val);
+        TextView valB = root.findViewById(R.id.text_led_b_val);
+
+        SeekBar.OnSeekBarChangeListener ledListener = new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (seekBar == seekR) { ledR = progress; valR.setText(String.valueOf(progress)); }
+                else if (seekBar == seekG) { ledG = progress; valG.setText(String.valueOf(progress)); }
+                else if (seekBar == seekB) { ledB = progress; valB.setText(String.valueOf(progress)); }
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                send(UC2CommandBuilder.ledFill(ledR, ledG, ledB));
+            }
+        };
+        seekR.setOnSeekBarChangeListener(ledListener);
+        seekG.setOnSeekBarChangeListener(ledListener);
+        seekB.setOnSeekBarChangeListener(ledListener);
+
+        root.findViewById(R.id.btn_led_apply).setOnClickListener(v ->
+                send(UC2CommandBuilder.ledFill(ledR, ledG, ledB)));
+        root.findViewById(R.id.btn_led_left).setOnClickListener(v ->
+                send(UC2CommandBuilder.ledPattern("left", ledR, ledG, ledB)));
+        root.findViewById(R.id.btn_led_right).setOnClickListener(v ->
+                send(UC2CommandBuilder.ledPattern("right", ledR, ledG, ledB)));
+        root.findViewById(R.id.btn_led_off).setOnClickListener(v -> {
+            send(UC2CommandBuilder.ledOff());
+            seekR.setProgress(0); seekG.setProgress(0); seekB.setProgress(0);
+        });
+    }
+
+    private void setupLaserSlider(View root, int seekBarId, int textId, int laserId) {
+        SeekBar seekBar = root.findViewById(seekBarId);
+        TextView textVal = root.findViewById(textId);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int val = 0;
+            @Override
+            public void onProgressChanged(SeekBar sb, int progress, boolean fromUser) {
+                val = progress;
+                textVal.setText(String.valueOf(progress));
+            }
+            @Override public void onStartTrackingTouch(SeekBar sb) {}
+            @Override
+            public void onStopTrackingTouch(SeekBar sb) {
+                send(UC2CommandBuilder.laserSet(laserId, val));
+            }
+        });
+    }
+
+    private void setupGalvoControls(View root) {
+        SeekBar seekX = root.findViewById(R.id.seekbar_galvo_x);
+        SeekBar seekY = root.findViewById(R.id.seekbar_galvo_y);
+        TextView valX = root.findViewById(R.id.text_galvo_x_val);
+        TextView valY = root.findViewById(R.id.text_galvo_y_val);
+        EditText editNx = root.findViewById(R.id.edit_galvo_nx);
+        EditText editNy = root.findViewById(R.id.edit_galvo_ny);
+
+        seekX.setOnSeekBarChangeListener(new SimpleSeekBarListener() {
+            @Override public void onProgressChanged(SeekBar sb, int p, boolean u) { valX.setText(String.valueOf(p)); }
+        });
+        seekY.setOnSeekBarChangeListener(new SimpleSeekBarListener() {
+            @Override public void onProgressChanged(SeekBar sb, int p, boolean u) { valY.setText(String.valueOf(p)); }
+        });
+
+        root.findViewById(R.id.btn_galvo_set).setOnClickListener(v ->
+                send(UC2CommandBuilder.galvoSetPosition(seekX.getProgress(), seekY.getProgress())));
+
+        root.findViewById(R.id.btn_galvo_scan).setOnClickListener(v -> {
+            int nx = 128, ny = 128;
+            try { nx = Integer.parseInt(editNx.getText().toString()); } catch (NumberFormatException ignored) {}
+            try { ny = Integer.parseInt(editNy.getText().toString()); } catch (NumberFormatException ignored) {}
+            send(UC2CommandBuilder.galvoRasterScan(nx, ny, 500, 3500, 500, 3500, 1, true, true));
+        });
+
+        root.findViewById(R.id.btn_galvo_stop).setOnClickListener(v -> send(UC2CommandBuilder.galvoStop()));
+    }
+
+    private void setupSerialMonitor(View root) {
+        textSerialOutput = root.findViewById(R.id.text_serial_output);
+        scrollSerial = root.findViewById(R.id.scroll_serial);
+        editSerialCmd = root.findViewById(R.id.edit_serial_cmd);
+        switchSerialVisible = root.findViewById(R.id.switch_serial_visible);
+
+        switchSerialVisible.setOnCheckedChangeListener((btn, checked) -> {
+            scrollSerial.setVisibility(checked ? View.VISIBLE : View.GONE);
+        });
+
+        root.findViewById(R.id.btn_serial_send).setOnClickListener(v -> {
+            String cmd = editSerialCmd.getText().toString().trim();
+            if (!cmd.isEmpty()) {
+                send(cmd);
+                appendSerialText("> " + cmd + "\n", getResources().getColor(R.color.colorSendText));
+                editSerialCmd.setText("");
+            }
+        });
+
+        root.findViewById(R.id.btn_serial_clear).setOnClickListener(v ->
+                textSerialOutput.setText(""));
+    }
+
+    // ---- Menus ----
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater) {
@@ -302,20 +336,17 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.clear) {
+            textSerialOutput.setText("");
             return true;
-        } else {
-            return super.onOptionsItemSelected(item);
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    /*
-     * Serial
-     */
+    // ---- Serial callbacks ----
+
     @Override
     public void onNewData(byte[] data) {
-        mainLooper.post(() -> {
-            receive(data);
-        });
+        mainLooper.post(() -> receive(data));
     }
 
     @Override
@@ -326,16 +357,8 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         });
     }
 
-    private void requestUsbPermission(UsbDevice device) {
-        UsbManager usbManager = (UsbManager) getActivity().getSystemService(Context.USB_SERVICE);
-        PendingIntent permissionIntent = PendingIntent.getBroadcast(getActivity(), 0, new Intent(ACTION_USB_PERMISSION),
-                PendingIntent.FLAG_IMMUTABLE);
-        usbManager.requestPermission(device, permissionIntent);
-    }
+    // ---- Serial connection ----
 
-    /*
-     * Serial + UI
-     */
     private void connect() {
         UsbDevice device = null;
         UsbManager usbManager = (UsbManager) getActivity().getSystemService(Context.USB_SERVICE);
@@ -347,9 +370,8 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
             return;
         }
         UsbSerialDriver driver = UsbSerialProber.getDefaultProber().probeDevice(device);
-        if (driver == null) {
+        if (driver == null)
             driver = CustomProber.getCustomProber().probeDevice(device);
-        }
         if (driver == null) {
             status("connection failed: no driver for device");
             return;
@@ -372,10 +394,8 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         if (usbConnection == null) {
             if (!usbManager.hasPermission(driver.getDevice()))
                 status("connection failed: permission denied");
-            else {
-                requestUsbPermission(device);
+            else
                 status("connection failed: open failed");
-            }
             return;
         }
 
@@ -402,9 +422,8 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         }
         usbIoManager = null;
         try {
-            usbSerialPort.close();
-        } catch (IOException ignored) {
-        }
+            if (usbSerialPort != null) usbSerialPort.close();
+        } catch (IOException ignored) {}
         usbSerialPort = null;
     }
 
@@ -416,112 +435,54 @@ public class ControlFragment extends Fragment implements SerialInputOutputManage
         try {
             byte[] data = (str + '\n').getBytes();
             usbSerialPort.write(data, WRITE_WAIT_MILLIS);
+            Log.d(TAG, "TX: " + str);
         } catch (Exception e) {
             onRunError(e);
         }
     }
 
-    private void read() {
-        if (!connected) {
-            Toast.makeText(getActivity(), "not connected", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        try {
-            byte[] buffer = new byte[8192];
-            int len = usbSerialPort.read(buffer, READ_WAIT_MILLIS);
-            receive(Arrays.copyOf(buffer, len));
-        } catch (IOException e) {
-            // when using read with timeout, USB bulkTransfer returns -1 on timeout _and_
-            // errors
-            // like connection loss, so there is typically no exception thrown here on error
-            status("connection lost: " + e.getMessage());
-            disconnect();
+    private void receive(byte[] data) {
+        String str = new String(data, StandardCharsets.UTF_8);
+        Log.d(TAG, "RX: " + str);
+        if (textSerialOutput != null && switchSerialVisible != null && switchSerialVisible.isChecked()) {
+            appendSerialText(str, getResources().getColor(R.color.colorReceiveText));
         }
     }
 
-    private void receive(byte[] data) {
-        String str = new String(data, StandardCharsets.UTF_8);
-        Log.d("TEST", str);
+    private void appendSerialText(String text, int color) {
+        if (textSerialOutput == null) return;
+        SpannableString span = new SpannableString(text);
+        span.setSpan(new ForegroundColorSpan(color), 0, text.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        textSerialOutput.append(span);
+        // Trim if too long
+        if (textSerialOutput.getText().length() > MAX_SERIAL_LOG_LENGTH) {
+            CharSequence t = textSerialOutput.getText();
+            textSerialOutput.setText(t.subSequence(t.length() - MAX_SERIAL_LOG_LENGTH / 2, t.length()));
+        }
+        // Auto-scroll
+        scrollSerial.post(() -> scrollSerial.fullScroll(View.FOCUS_DOWN));
     }
 
     void status(String str) {
-    }
-
-    String getLEDDict(int intensity) {
-        // Create the JSON object
-        String jsonString = "{}";
-        try {
-            JSONObject jsonDict = new JSONObject();
-            // Add the task key-value pair to the JSON object
-            jsonDict.put("task", "/ledarr_act");
-
-            // Create the LED object and add the LEDArrayMode key-value pair to it
-            JSONObject led = new JSONObject();
-            led.put("LEDArrMode", 1);
-
-            // Create the LED array and add the LED object to it
-            JSONArray ledArray = new JSONArray();
-            JSONObject ledObject = new JSONObject();
-            ledObject.put("id", 0);
-            ledObject.put("r", intensity);
-            ledObject.put("g", intensity);
-            ledObject.put("b", intensity);
-            ledArray.put(ledObject);
-
-            // Add the LED array to the LED object
-            led.put("led_array", ledArray);
-
-            // Add the LED object to the JSON object
-            jsonDict.put("led", led);
-
-            // Convert the JSON object to a string for sending
-            jsonString = jsonDict.toString();
-            Log.d("TEST", "JSON: " + jsonString);
-
-
-        } catch (JSONException e) {
-            Log.e(TAG, String.valueOf(e));
+        Log.d(TAG, "Status: " + str);
+        if (textStatus != null) {
+            textStatus.setText(str);
         }
-        return jsonString;
-    }
-
-    String getLaserDict(int intensity, int laserId) {
-        // Create the JSON object
-        String jsonString = "{}";
-        try {
-            //  {"task": "/laser_act", "LASERid":1, "LASERval": 1024}
-            //   {"task": "/laser_act", "LASERid":1, "LASERval": 1024}
-            JSONObject jsonDict = new JSONObject();
-            // Add the task key-value pair to the JSON object
-            jsonDict.put("task", "/laser_act");
-            jsonDict.put("LASERid", laserId);
-            jsonDict.put("LASERval", intensity);
-            // Convert the JSON object to a string for sending
-            jsonString = jsonDict.toString();
-            Log.d("TEST", "JSON: " + jsonString);
-        } catch (JSONException e) {
-            Log.e(TAG, String.valueOf(e));
+        if (statusIndicator != null) {
+            GradientDrawable dot = new GradientDrawable();
+            dot.setShape(GradientDrawable.OVAL);
+            dot.setSize(12, 12);
+            dot.setColor(connected ? Color.parseColor("#4CAF50") : Color.parseColor("#F44336"));
+            statusIndicator.setBackground(dot);
         }
-        return jsonString;
-    }
-
-    public static String getMotorControlDict(int axis, int position, int speed) {
-        JSONObject json = new JSONObject();
-        JSONArray steppers = new JSONArray();
-        JSONObject stepper = new JSONObject();
-        try {
-            stepper.put("stepperid", axis);
-            stepper.put("position", position);
-            stepper.put("speed", speed);
-            stepper.put("isabs", 0);
-            stepper.put("isaccel", 0);
-            steppers.put(stepper);
-            json.put("task", "/motor_act");
-            json.put("motor", new JSONObject().put("steppers", steppers));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (textSerialOutput != null) {
+            appendSerialText("[" + str + "]\n", getResources().getColor(R.color.colorStatusText));
         }
-        return json.toString();
     }
 
+    // Helper base class for seek bar listeners where only onProgressChanged varies
+    private abstract static class SimpleSeekBarListener implements SeekBar.OnSeekBarChangeListener {
+        @Override public void onStartTrackingTouch(SeekBar seekBar) {}
+        @Override public void onStopTrackingTouch(SeekBar seekBar) {}
+    }
 }

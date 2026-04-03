@@ -3,15 +3,32 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?android:attr/listDivider"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/colorBackground">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="@string/devices"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorPrimary" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:text="Connect your ESP32 via USB"
+        android:textSize="13sp"
+        android:textColor="@color/colorOnSurfaceSecondary" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorGrey"
+        android:alpha="0.3" />
 </LinearLayout>

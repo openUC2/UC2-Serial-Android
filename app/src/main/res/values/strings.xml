@@ -1,6 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_title">UC2 Serial Control</string>
-    <string name="app_name">UC2 Serial</string>
+    <string name="app_title">UC2 Controller</string>
+    <string name="app_name">UC2 Controller</string>
     <string name="devices">USB Devices</string>
+
+    <!-- Section titles -->
+    <string name="section_motor">Motor Control</string>
+    <string name="section_led">LED Array</string>
+    <string name="section_laser">Laser Control</string>
+    <string name="section_galvo">Galvo Scanner</string>
+    <string name="section_system">System</string>
+    <string name="section_serial">Serial Monitor</string>
+
+    <!-- Motor -->
+    <string name="axis_a">A</string>
+    <string name="axis_x">X</string>
+    <string name="axis_y">Y</string>
+    <string name="axis_z">Z</string>
+    <string name="label_speed">Speed</string>
+    <string name="label_steps">Steps</string>
+    <string name="btn_home">HOME</string>
+    <string name="btn_stop">STOP</string>
+
+    <!-- LED -->
+    <string name="label_intensity">Intensity</string>
+    <string name="label_red">R</string>
+    <string name="label_green">G</string>
+    <string name="label_blue">B</string>
+    <string name="label_pattern">Pattern</string>
+
+    <!-- Laser -->
+    <string name="laser_0">Laser 0</string>
+    <string name="laser_1">Laser 1 (R)</string>
+    <string name="laser_2">Laser 2 (G)</string>
+    <string name="laser_3">Laser 3 (B)</string>
+
+    <!-- Galvo -->
+    <string name="label_galvo_x">X Position</string>
+    <string name="label_galvo_y">Y Position</string>
+    <string name="btn_galvo_start">Start Scan</string>
+    <string name="btn_galvo_stop">Stop</string>
+
+    <!-- System -->
+    <string name="btn_get_state">Get State</string>
+    <string name="btn_restart">Restart ESP32</string>
+
+    <!-- Serial -->
+    <string name="btn_send">Send</string>
+    <string name="btn_clear">Clear</string>
+    <string name="hint_command">Enter JSON command…</string>
+
+    <!-- Connection -->
+    <string name="status_connected">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
 </resources>

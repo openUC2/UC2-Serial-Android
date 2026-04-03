@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reusable axis control row: label + 4 jog buttons + home -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:layout_marginBottom="4dp">
+
+    <TextView
+        android:id="@+id/text_axis_label"
+        android:layout_width="28dp"
+        android:layout_height="wrap_content"
+        android:text="A"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorSectionMotor"
+        android:gravity="center" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_minus_large"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:text="\u2212\u2212"
+        android:textSize="14sp"
+        app:cornerRadius="8dp"
+        android:layout_marginEnd="2dp"
+        android:minWidth="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_minus_small"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:text="\u2212"
+        android:textSize="14sp"
+        app:cornerRadius="8dp"
+        android:layout_marginEnd="2dp"
+        android:minWidth="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_plus_small"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:text="+"
+        android:textSize="14sp"
+        app:cornerRadius="8dp"
+        android:layout_marginEnd="2dp"
+        android:minWidth="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_plus_large"
+        android:layout_width="0dp"
+        android:layout_height="38dp"
+        android:layout_weight="1"
+        android:text="++"
+        android:textSize="14sp"
+        app:cornerRadius="8dp"
+        android:minWidth="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_home"
+        android:layout_width="44dp"
+        android:layout_height="38dp"
+        android:text="H"
+        android:textSize="11sp"
+        app:cornerRadius="8dp"
+        android:layout_marginStart="2dp"
+        android:minWidth="0dp"
+        android:insetTop="0dp"
+        android:insetBottom="0dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton" />
+</LinearLayout>

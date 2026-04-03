@@ -1,7 +1,39 @@
 <resources>
-    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSecondary">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+    </style>
+
+    <!-- Card-based section style -->
+    <style name="SectionCard" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">2dp</item>
+        <item name="cardCornerRadius">12dp</item>
+        <item name="contentPadding">12dp</item>
+        <item name="android:layout_marginBottom">12dp</item>
+    </style>
+
+    <style name="SectionHeader">
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorOnSurface</item>
+        <item name="android:paddingBottom">8dp</item>
+    </style>
+
+    <style name="AxisButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textSize">16sp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">40dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="SliderLabel">
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/colorOnSurfaceSecondary</item>
+        <item name="android:gravity">center_vertical</item>
     </style>
 </resources>

@@ -4,10 +4,18 @@
     <item
         android:id="@+id/clear"
         android:icon="@drawable/ic_delete_white_24dp"
-        android:title="Clear"
+        android:title="Clear Serial"
         app:showAsAction="always" />
     <item
         android:id="@+id/send_break"
         android:title="Send BREAK"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/get_state"
+        android:title="Get Device State"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/restart_esp"
+        android:title="Restart ESP32"
         app:showAsAction="never" />
 </menu>

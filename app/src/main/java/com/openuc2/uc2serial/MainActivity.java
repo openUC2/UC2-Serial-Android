@@ -35,6 +35,12 @@ public class MainActivity extends AppCompatActivity implements FragmentManager.O
     @Override
     protected void onNewIntent(Intent intent) {
         if("android.hardware.usb.action.USB_DEVICE_ATTACHED".equals(intent.getAction())) {
+            // Refresh device list if on the devices screen
+            DevicesFragment devices = (DevicesFragment)getSupportFragmentManager().findFragmentByTag("devices");
+            if (devices != null && devices.isVisible()) {
+                devices.refresh();
+            }
+            // Notify control fragment if already connected
             ControlFragment control = (ControlFragment)getSupportFragmentManager().findFragmentByTag("control");
             if (control != null)
                 control.status("USB device detected");

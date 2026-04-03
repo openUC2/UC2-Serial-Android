@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary colors -->
-    <color name="colorPrimary">#949C29</color>
-    <color name="colorPrimaryDark">#61671B</color>
-    <color name="colorAccent">#D8E33B</color>
+    <!-- Primary brand colors -->
+    <color name="colorPrimary">#1B5E20</color>
+    <color name="colorPrimaryDark">#0D3B12</color>
+    <color name="colorPrimaryLight">#4CAF50</color>
+    <color name="colorAccent">#FF9800</color>
+
+    <!-- Surface / background -->
+    <color name="colorBackground">#F5F5F5</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#E8F5E9</color>
 
     <!-- Text colors -->
-    <color name="colorReceiveText">#00FF00</color>
-    <color name="colorSendText">#82CAFF</color>
-    <color name="colorStatusText">#FFDB58</color>
+    <color name="colorOnPrimary">#FFFFFF</color>
+    <color name="colorOnSurface">#212121</color>
+    <color name="colorOnSurfaceSecondary">#757575</color>
 
-    <!-- Additional colors -->
-    <color name="colorPrimaryHex">#023773</color>
-    <color name="colorSecondaryGreen">#85B918</color>
-    <color name="colorTurquoise">#1F9C7C</color>
-    <color name="colorLightGrey">#FAF9F9</color>
-    <color name="colorGrey">#999999</color>
+    <!-- Serial monitor text -->
+    <color name="colorReceiveText">#4CAF50</color>
+    <color name="colorSendText">#2196F3</color>
+    <color name="colorStatusText">#FF9800</color>
+    <color name="colorErrorText">#F44336</color>
+    <color name="colorSerialBg">#1E1E1E</color>
 
+    <!-- Section header colors -->
+    <color name="colorSectionMotor">#1565C0</color>
+    <color name="colorSectionLED">#F57F17</color>
+    <color name="colorSectionLaser">#C62828</color>
+    <color name="colorSectionGalvo">#6A1B9A</color>
+    <color name="colorSectionSystem">#37474F</color>
+
+    <!-- Legacy compat aliases -->
+    <color name="colorPrimaryHex">#1565C0</color>
+    <color name="colorSecondaryGreen">#4CAF50</color>
+    <color name="colorTurquoise">#1B5E20</color>
+    <color name="colorLightGrey">#F5F5F5</color>
+    <color name="colorGrey">#9E9E9E</color>
+
+    <!-- Laser channel colors -->
+    <color name="colorLaser0">#9E9E9E</color>
+    <color name="colorLaser1">#F44336</color>
+    <color name="colorLaser2">#4CAF50</color>
+    <color name="colorLaser3">#2196F3</color>
 </resources>

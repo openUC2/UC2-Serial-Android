@@ -6,10 +6,22 @@
         <item>19200</item>
         <item>57600</item>
         <item>115200</item>
+        <item>921600</item>
     </string-array>
 
     <string-array name="read_modes">
         <item>event: SerialInputOutputManager.onNewData()</item>
         <item>direct: UsbSerialPort.read()</item>
+    </string-array>
+
+    <string-array name="led_patterns">
+        <item>fill</item>
+        <item>off</item>
+        <item>left</item>
+        <item>right</item>
+        <item>top</item>
+        <item>bottom</item>
+        <item>circles</item>
+        <item>rings</item>
     </string-array>
 </resources>

@@ -25,6 +25,12 @@
     <usb-device vendor-id="6790" product-id="21795" /> <!-- 0x5523: CH341A -->
     <usb-device vendor-id="6790" product-id="29987" /> <!-- 0x7523: CH340 -->
 
+    <!-- 0x303A: Espressif ESP32-S2/S3/C3 native USB -->
+    <usb-device vendor-id="12346" product-id="4097" />  <!-- 0x303A / 0x1001: ESP32-S2 -->
+    <usb-device vendor-id="12346" product-id="32785" /> <!-- 0x303A / 0x8011: ESP32-S3 (CDC) -->
+    <usb-device vendor-id="12346" product-id="4098" />  <!-- 0x303A / 0x1002: ESP32-S3 -->
+    <usb-device vendor-id="12346" />                     <!-- 0x303A: any Espressif device -->
+
     <!-- CDC driver -->
     <usb-device vendor-id="9025" />                   <!-- 0x2341 / ......: Arduino -->
     <usb-device vendor-id="5824" product-id="1155" /> <!-- 0x16C0 / 0x0483: Teensyduino  -->

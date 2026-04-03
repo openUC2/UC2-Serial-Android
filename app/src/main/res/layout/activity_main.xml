@@ -9,13 +9,16 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorTurquoise"
+            android:background="@color/colorPrimary"
+            app:titleTextColor="@color/colorOnPrimary"
+            app:subtitleTextColor="@color/colorOnPrimary"
             />
 
     </com.google.android.material.appbar.AppBarLayout>
